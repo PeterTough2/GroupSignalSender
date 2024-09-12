@@ -1,0 +1,104 @@
+/* CSS Document */
+
+.cspacing { 
+margin-bottom:15px;
+padding-top:7px;
+padding-bottom:7px;
+}
+.cspacing:hover {
+	border:2px #fc7700 dashed;
+}
+.cxcenter {
+	text-align:center;
+	background-color: rgba(0, 0, 0, 0.39);
+	padding: 5px;
+	transition: all 0.9s ease 0s;
+	-moz-transition: all 0.9s ease 0s;
+	-webkit-transition: all 0.9s ease 0s;
+	-ms-transition:all 0.9s ease 0s;
+	
+	font-size: 18px;
+	width: 80%;
+	margin-left:auto;
+	margin-right:auto;
+	font-family: 'Roboto';
+}
+.cxcenter:hover {
+	border:1px #fc7700 dashed;
+}
+ul.refmenu li {
+	color: #43484E;
+	font-family: 'Roboto',sans-serif;
+	font-size: 14px;
+	list-style:none;
+	padding-top: 7px;
+	text-transform: capitalize;
+}
+ul.refmenu li:hover {
+	color: #FC7700;
+	cursor:pointer;
+}
+ul.refmenu li.header {
+	text-transform:uppercase;
+	color: #FC7700;
+	font-weight:700;
+}
+.progress {
+	margin-top:10px;
+}
+#captcha {
+	margin-top:10px;
+	margin-bottom:10px;
+}
+a.captcha {
+	cursor:pointer !important;
+}
+div#status {
+width: auto;
+margin-bottom: 10px;
+}
+#gorepor {
+height:auto;
+font-size:13px;
+font-family:Tahoma, Geneva, sans-serif;
+padding:10px;
+border-radius:3px;
+background-color: #65C418;
+background-repeat: repeat-x;
+border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+background-image: linear-gradient(to bottom, #75D428, #4EAD00);
+color:#fff;
+}
+#barepor {
+height:auto;
+font-size:13px;
+font-family:Tahoma, Geneva, sans-serif;
+padding:10px;
+border-radius:3px;
+background-color:#EE5F5B;
+background-repeat: repeat-x;
+border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+background-image: linear-gradient(to bottom, #EE5F5B, #BD362F);
+color: #FFF;
+}
+img#acticon {
+padding-right:5px;
+}
+.pushleft {
+	margin-right:15px;
+}
+a.clink {
+	text-decoration: underline;
+	color:#fff !important;
+}
+/*increased logo size requires this*/
+.container-fluid > .navbar-collapse, .container-fluid > .navbar-header, .container > .navbar-collapse, .container > .navbar-header {
+    margin-bottom: 35px;/*to push collapsible menu down to avoid clashing with the logo.*/
+}
+#navigation .in {
+	margin-bottom: 0px;
+	margin-top:40px;
+}
+.navbar-collapse {
+margin-top:20px;
+}

@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<style>
+  img {
+    height: 200px;
+    width: 200px;
+    border: 2px solid white;
+  }
+</style>
+
+<body>
+  <label">Image name</label>
+    <input type="text" id="namebox">
+    <label id="extlab"></label><br><br>
+
+    <img id="myimg">
+    <label id="upprogress"></label><br><br>
+
+    <button id="selbtn">Select image</button>
+    <button id="upbtn">Upload image</button>
+    <button id="downbtn">Retrieve image</button>
+    <script type="module">
+      // Import the functions you need from the SDKs you need
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+      // TODO: Add SDKs for Firebase products that you want to use
+      // https://firebase.google.com/docs/web/setup#available-libraries
+
+      // Your web app's Firebase configuration
+      const firebaseConfig = {
+        apiKey: "AIzaSyBQ5r38nDI66O5UNiR29aHs6ZUHYqZ1Kmw",
+        authDomain: "upload-c4926.firebaseapp.com",
+        databaseURL: "https://upload-c4926-default-rtdb.firebaseio.com",
+        projectId: "upload-c4926",
+        storageBucket: "upload-c4926.appspot.com",
+        messagingSenderId: "937733634964",
+        appId: "1:937733634964:web:8b68af48e01303bac1ad81"
+      };
+
+      /*
+      // Import the functions you need from the SDKs you need
+      import { initializeApp } from "firebase/app";
+      import { getAnalytics } from "firebase/analytics";
+
+      // TODO: Add SDKs for Firebase products that you want to use
+      // https://firebase.google.com/docs/web/setup#available-libraries
+
+
+      // Your web app's Firebase configuration
+      // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+
+      const firebaseConfig = {
+        apiKey: "AIzaSyAMnOb2vFltYCPeeAbFekPppYJG8tQC3P0",
+        authDomain: "zen4-7e195.firebaseapp.com",
+        projectId: "zen4-7e195",
+        storageBucket: "zen4-7e195.appspot.com",
+        messagingSenderId: "471249889223",
+        appId: "1:471249889223:web:1014b4630409963485dbe2",
+        measurementId: "G-6TVGD7VEKY"
+      };
+
+      // Initialize Firebase
+      const app = initializeApp(firebaseConfig);
+      const analytics = getAnalytics(app);
+      */
+
+      // Initialize Firebase
+      const app = initializeApp(firebaseConfig);
+
+      import { getStorage, ref as sRef, uploadBytesResumable, getDownloadURL }
+        from "https://www.gstatic.com/firebasejs/9.23.0/firebase-storage.js"
+
+      import { getFirestore, doc, getDoc, setDoc, collection }
+        from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js"
+      const clouddb = getFirestore();
+
+
+      let files = [];
+      let reader = new FileReader();
+
+      let namebox = document.getElementById('namebox');
+      let extlab = document.getElementById('extlab');
+      let myimg = document.getElementById('myimg');
+      let Selbtn = document.getElementById('selbtn');
+      let UpBtn = document.getElementById('upbtn');
+      let Downbtn = document.getElementById('downbtn');
+      let proglab = document.getElementById('upprogress');
+
+      let input = document.createElement('input');
+      input.type = `file`;
+
+      input.onchange = e => {
+        files = e.target.files;
+
+        let extention = GetFileExtention(files[0]);
+        let name = GetFileName(files[0]);
+
+        namebox.value = name;
+        extlab.innerHTML = extention;
+
+        reader.readAsDataURL(files[0]);
+
+      }
+
+      reader.onload = function () {
+        myimg.src = reader.result;
+      }
+
+      Selbtn.onclick = function () {
+        input.click();
+      }
+      function GetFileExtention(file) {
+        let temp = file.name.split('.');
+        let ext = temp.slice(temp.lenght - 1, temp.lenght);
+        return '.' + ext[0];
+      }
+      function GetFileName(file) {
+        let temp = file.name.split('.');
+        let fname = temp.slice(0, -1).join('.');
+        return fname;
+
+      }
+      // // upload========================================================
+      async function UploadProcess() {
+        let ImgToUpload = files[0];
+        let ImgName = namebox.value + extlab.innerHTML;
+
+        const metaData = {
+          contentType: ImgToUpload.type
+        }
+
+        const storage = getStorage();
+
+        const storageRef = sRef(storage, "images/" + ImgName);
+        const uploadTask = uploadBytesResumable(storageRef, ImgToUpload);
+
+        uploadTask.on("state_changed",
+          (snapshot) => {
+            const progress =
+              Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+            // setProgresspercent(progress);
+            // let progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+            proglab.innerHTML = "Upload" + progress + "%";
+          },
+          (error) => {
+            alert(error);
+          },
+          () => {
+            getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+              SaveURLtoFirestore(downloadURL);
+            });
+          }
+        );
+      }
+      async function SaveURLtoFirestore() {
+        let name = namebox.value;
+        let ext = extlab.innerHTML;
+
+        let ref = doc(clouddb, "ImageLinks/"+name);
+
+        await setDoc(ref, {
+          ImageName: (name + ext),
+          ImageURL: Url
+        })
+      }
+      async function GetImagefromFirestore() {
+        let name = namebox.value;
+        let ref = doc(clouddb, "ImageLinks/"+name);
+        const docSnap = await getDoc(ref);
+
+        if(docSnap.exists()){
+          myimg.src = docSnap.data().ImageURL
+        }
+      }
+
+      UpBtn.onclick = UploadProcess;
+      Downbtn.onclick = GetImagefromFirestore;
+    </script>
+</body>
+
+</html>
